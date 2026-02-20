@@ -10,7 +10,9 @@
 
 ### Entity Description
 
-**<a href="https://github.com/yvoznyak/Trekster/blob/main/db/uml.pdf" target="_blank">Link to Documentation</a>**
+<p align="center">
+	<img src="https://github.com/yvoznyak/Trekster.web/blob/main/docs/img/Db/Db%20scheme.jpg" alt="Db scheme"/>
+</p>
 
 ### Data Classification by Data Retention Policy
 
@@ -97,11 +99,7 @@
 
 ## Resiliency Model
 
-### CID Diagram (Cause-Influence-Diagram)
-
-<p align="center">
-	<img src="https://github.com/yvoznyak/ooap_trekster/blob/main/CID.png" alt="CID Diagram"/>
-</p>
+### Cause-Influence Analysis
 
 #### Problem — Incorrect Account Balance
 
@@ -111,11 +109,7 @@ Description of root cause categories:
 - **Equipment**: Problems with the server or other infrastructure components that may affect the database.
 - **Materials**: Incorrectly entered information about currency or transactions, leading to an incorrect balance.
 
-#### RMA Diagram (Root Cause Analysis)
-
-<p align="center">
-	<img src="https://github.com/yvoznyak/ooap_trekster/blob/main/RMA.png" alt="RMA Diagram"/>
-</p>
+#### Root Cause Analysis
 
 ##### Analysis and Resolution Steps:
 
@@ -131,10 +125,6 @@ Description of root cause categories:
 - Add a data validation mechanism for categories and exchange rates.
 - Verify the correctness of calculations during transaction insertion or updates.
 - Implement automated tests to verify data integrity.
-
-## Security Model
-
-**<a href="https://github.com/yvoznyak/ooap_trekster/blob/main/Mitigation%20plan.md" target="_blank">Threat Model and Mitigation Plan</a>**
 
 ## Analytics Model
 
