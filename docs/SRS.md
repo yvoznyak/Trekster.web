@@ -1,51 +1,51 @@
 # Trekster
 
-Trekster - простий та зручний додаток для ведення обліку особистих фінансів, створений для оптимізації і налагодженя управління власними коштами. Trekster дає можливість вручну вводити дані про витрати і доходи, а також отримувати інформацію, погруповану по категоріях та валютах.
+Trekster is a simple and user-friendly application for personal finance tracking, designed to optimize and streamline personal fund management. Trekster allows users to manually enter expense and income data, as well as view information grouped by categories and currencies.
 
-# Функціональні вимоги
+# Functional Requirements
 
-У додатку є два типи користувачів: **авторизований користувач** та **неавторизований користувач**  
+The application defines two types of users: **Authorized User** and **Non-authorized User**.
 
-Неавторизований користувач може:
-- Реєструватись
-- Авторизуватись
-- Скидати пароль
-  
-Авторизований користувач може:
-- Бачити дашборд з ключовими показниками (баланс рахунків, співвідношення витрат і доходів, залишок коштів)
-- Налаштовувати період звітності (щоденний, тижневий, місячний, річний)
-- Фільтрувати транзакції за датою, категорією, рахунком або сумою
-- Створювати транзакцію (витрату чи дохід)
-- Бачити аналітику витрат та доходів у вигляді графіків (наприклад, кругова діаграма або стовпчаста діаграма)
-- Експортувати дані про транзакції у файл (CSV, Excel)
-- Бачити свої рахунки і баланс кожного з них
-- Додавати рахунки
-- Бачити історію транзакцій
-- Редагувати історію транзакцій
-- Бачити звітність по доходах та витратах протягом місяця
-- Налаштовуваьи рахунки і категорії (видалення і редагування)
-- Керувати категоріями
+A non-authorized user can:
+- Register
+- Log in
+- Reset password
 
-# Нефункціональні вимоги
-- Мова інтерфейсу: Українська (з можливістю додавання інших мов у майбутньому)
-- Дизайн інтерфейсу: Статичний, без підтримки адаптивності (не responsive)
-- Програма не потребує доступу до мережі Інтернет
-- Програма повинна забезпечувати миттєвий відгук на дії користувача (менше 2 секунд на виконання запитів)
-- Стабільність: Підтримка стабільної роботи програми навіть при введенні великої кількості даних (тисячі транзакцій)
-- Програма повинна споживати мінімальні системні ресурси (процесор, оперативну пам'ять), щоб її можна було запускати на пристроях із середніми технічними характеристиками
-- Масштабованість: Можливість роботи з великою кількістю рахунків і транзакцій без погіршення продуктивності
-- Інтерфейс користувача: Простий та інтуїтивно зрозумілий інтерфейс для користувачів без досвіду роботи з подібними програмами
-- Збереження даних: Регулярне автоматичне збереження змін у базі даних для запобігання втрати даних.
-- Сумісність: Сумісність з основними файловими форматами для експорту (CSV, Excel).
+An authorized user can:
+- View a dashboard with key metrics (account balances, expense-to-income ratio, remaining funds)
+- Set the reporting period (daily, weekly, monthly, yearly)
+- Filter transactions by date, category, account, or amount
+- Create transactions (expenses or income)
+- View expense and income analytics via charts (e.g., pie charts or bar charts)
+- Export transaction data to files (CSV, Excel)
+- View accounts and the balance of each
+- Add new accounts
+- View transaction history
+- Edit transaction history
+- View monthly reports on income and expenses
+- Configure accounts and categories (deleting and editing)
+- Manage categories
 
-# Ролі
+# Non-functional Requirements
+- Interface language: Ukrainian (with the possibility of adding other languages in the future)
+- Interface design: Static, without responsive support
+- The program does not require Internet access
+- The program must provide an instant response to user actions (less than 2 seconds for request execution)
+- Stability: Support for stable operation even with a large amount of data (thousands of transactions)
+- Minimal resource consumption (CPU, RAM) to ensure compatibility with mid-range hardware
+- Scalability: Ability to handle a large number of accounts and transactions without performance degradation
+- User Interface: Simple and intuitive interface for users without prior experience with similar software
+- Data Preservation: Regular automatic saving of changes to the database to prevent data loss
+- Compatibility: Support for major file formats for export (CSV, Excel)
 
-| Роль             | Опис                                                                                 |
+# Roles
+
+| Role | Description |
 |------------------|--------------------------------------------------------------------------------------|
-| Авторизований користувач (Authorised User) | Може редагувати дані про свій акаунт, видаляти його. Бачити співвідношення витрат до загальних доходів, та залишку до загальних дохідів. Додавати, редагувати та видаляти транзакцію. Бачити свої рахунки і баланс кожного з них. Додавати, редагувати та видаляти рахунки. Бачити історію транзакцій. Бачити звітність по доходах і витратах протягом місяця посортовану згідно з категоріями. Додавати, редагувати та видаляти категорії. |
-| Неавторизований користувач (Non Authorised User) | Може реєструватися, авторизуватися, скидати пароль|
+| Authorized User | Can edit account data and delete the account. View expense-to-income and balance-to-income ratios. Add, edit, and delete transactions. View accounts and their balances. Add, edit, and delete accounts. View transaction history. View monthly income and expense reports sorted by category. Add, edit, and delete categories. |
+| Non-authorized User | Can register, log in, and reset password |
 
-## Use case Діаграма
+## Use Case Diagram
 
 <p align="center">
 	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/use.jpg" alt="Use case"/>
@@ -53,38 +53,38 @@ Trekster - простий та зручний додаток для веденн
 
 # High-level Architecture
 
-## 1. Клієнтська частина (Frontend)
-- **Технології:** HTML, CSS, JavaScript
-- **Основні компоненти:**
-  - **UI Компоненти:** Інтерфейс для введення транзакцій, перегляду рахунків та балансу.
-  - **Візуалізація:** Використання бібліотек для відображення графіків (наприклад, Chart.js) для звітів.
-  - **Формування звітів:** Формування користувацьких звітів на основі введених даних та фільтрів (період, категорія).
-  - **Взаємодія з локальним сховищем:** Збереження даних у локальному сховищі або базі даних на пристрої.
+## 1. Frontend
+- **Technologies:** HTML, CSS, JavaScript
+- **Main Components:**
+  - **UI Components:** Interface for transaction entry, account, and balance viewing.
+  - **Visualization:** Integration of chart libraries (e.g., Chart.js) for reporting.
+  - **Report Generation:** Creation of custom reports based on input data and filters (period, category).
+  - **Local Storage Interaction:** Saving data in local storage or a local database on the device.
 
-## 2. Серверна частина (Backend)
-- **Технології:** PHP або Node.js (опціонально для розширення функцій)
-- **Основні компоненти:**
-  - **Обробка даних:** Обробка транзакцій, балансів та категорій.
-  - **Управління категоріями та рахунками:** Додавання, редагування та видалення рахунків і категорій.
-  - **База даних:** Локальна база даних (SQLite або інша).
-  - **Безпека:** Шифрування даних та захист через локальні механізми аутентифікації.
+## 2. Backend
+- **Technologies:** PHP or Node.js (optional for feature expansion)
+- **Main Components:**
+  - **Data Processing:** Handling transactions, balances, and categories.
+  - **Category and Account Management:** Adding, editing, and deleting accounts and categories.
+  - **Database:** Local database (SQLite or other).
+  - **Security:** Data encryption and protection via local authentication mechanisms.
 
-## 3. Локальна база даних
-- **Технології:** SQLite або інший файл-орієнтований формат.
-- **Основні компоненти:**
-  - **Таблиці транзакцій:** Інформація про доходи, витрати, категорії та дати транзакцій.
-  - **Таблиці рахунків:** Інформація про рахунки, баланси та мультивалютність.
-  - **Інтерфейс доступу:** Простий API для CRUD-операцій.
+## 3. Local Database
+- **Technologies:** SQLite or other file-oriented formats.
+- **Main Components:**
+  - **Transaction Tables:** Information about income, expenses, categories, and transaction dates.
+  - **Account Tables:** Information about accounts, balances, and multi-currency support.
+  - **Access Interface:** Simple API for CRUD operations.
 
-## 4. Зовнішні сервіси (Опціонально)
-- **Інтеграція з банківськими API:** Можливість синхронізації з банківськими рахунками для авторизованих користувачів.
-- **Експорт/Імпорт даних:** Можливість експорту та імпорту даних у формати CSV або Excel.
-- **Хмарне зберігання:** Опціональна синхронізація з хмарою для доступу з різних пристроїв.
+## 4. External Services (Optional)
+- **Banking API Integration:** Potential synchronization with bank accounts for authorized users.
+- **Data Export/Import:** Ability to export and import data in CSV or Excel formats.
+- **Cloud Storage:** Optional cloud synchronization for multi-device access.
 
-## 5. Безпека
-- **Локальне шифрування даних:** Всі дані зберігаються локально з можливістю шифрування бази.
-- **Аутентифікація:** Двофакторна аутентифікація для авторизованих користувачів.
-- **Бекап даних:** Автоматичне створення локальних бекапів для запобігання втраті даних.
+## 5. Security
+- **Local Data Encryption:** All data is stored locally with optional database encryption.
+- **Authentication:** Two-factor authentication for authorized users.
+- **Data Backup:** Automatic creation of local backups to prevent data loss.
 
 # High level architecture diagram
 
@@ -92,7 +92,7 @@ Trekster - простий та зручний додаток для веденн
 	<img src="https://github.com/yvoznyak/ooap_trekster/blob/main/High%20level%20architecture%20diagram/trekster_architecture.png" alt="High-level Architecture" height="650"/>
 </p>
 
-# Concurency Patterns usage
+# Concurrency Patterns usage
 
 <p align="center">
 	<img src="https://github.com/yvoznyak/ooap_trekster/blob/main/Concurency%20Patterns%20usage/add_transaction.png" alt="Concurency Patterns usage" height="450"/>
@@ -114,178 +114,167 @@ Trekster - простий та зручний додаток для веденн
 	<img src="https://github.com/yvoznyak/ooap_trekster/blob/main/Concurency%20Patterns%20usage/view_reports.png" alt="Concurency Patterns usage" height="450"/>
 </p>
 
-# Система управління акаунтами
+# Account Management System
 
-| Use case          | Опис                                                   |
+| Use case | Description |
 |-------------------|--------------------------------------------------------|
-| Реєстрація        | Реєструватися у систему(Створювати нового користувача) |
-| Вхід              | Заходити у систему                                     |
-| Вихід             | Виходити з системи                                     |
-| Скидання паролю   | Зміна паролю користувача                               |
+| Registration | Sign up for the system (Create a new user) |
+| Log in | Access the system |
+| Log out | Exit the system |
+| Password Reset | Change user password |
 
-# Система управління фінансами
+# Finance Management System
 
-| Use case          | Опис                                                   |
+| Use case | Description |
 |-------------------|--------------------------------------------------------|
-| Бачити співвідношення витрат та залишку до загальних дохідів | Користувач бачить діаграму, яка показує у відсотковому відношенні частку загальних витрат та залишку від загальних доходів                    |
-| Додавати транзакцію                    | Додавати транзакцію до системи, обравши для неї категорію, суму, валюту та рахунок |
-| Бачити свої рахунки                    | Користувач бачить перелік усіх своїх рахунків та їхні поточні баланси              |
-| Додавати рахунок                       | Користувач може додавати рахунок до системи, ввівши початкову суму та валюту       |
-| Видаляти рахунок                       | Користувач може видаляти рахунок з системи та усі транзакції, пов'язані з нею      |
-| Бачити історію транзакцій              | Користувач бачить перелік усіх своїх транзакцій та інформацію про них              |
-| Редагувати історію транзакцій          | Користувач може редагувати категорію, суму, валюту, рахунок та дату                |
-| Бачити звітність по доходах і витратах | Користувач бачить звітність, погруповану по категоріях                             |
-| Бачити свої категорії                  | Користувач бачить перелік усіх своїх категорій                                     |
-| Додавати категорію                     | Користувач може додавати категорію до системи, обравши для неї тип                 |
-| Редагувати категорію                   | Користувач може редагувати категорію в системі                                     |
-| Видаляти категорію                     | Користувач може видаляти категорію з системи та усі транзакції, пов'язані з нею    |
+| View expense/balance to total income ratio | User sees a chart showing the percentage share of total expenses and balance relative to total income |
+| Add transaction | Add a transaction to the system by selecting a category, amount, currency, and account |
+| View accounts | User sees a list of all accounts and their current balances |
+| Add account | User can add an account by entering the initial amount and currency |
+| Delete account | User can delete an account and all associated transactions |
+| View transaction history | User sees a list of all transactions and their details |
+| Edit transaction history | User can edit category, amount, currency, account, and date |
+| View income and expense reports | User sees reports grouped by categories |
+| View categories | User sees a list of all their categories |
+| Add category | User can add a category by selecting its type |
+| Edit category | User can edit a category in the system |
+| Delete category | User can delete a category and all associated transactions |
 
 
-### Опис основних вікон програми (wireframes)
+### Wireframes Description
 
-#### 1. Головна сторінка
+#### 1. Main Page
 
 <p align="center">
-	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/main.jpg" alt="Головна"/>
+	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/main.jpg" alt="Main"/>
 </p>
 
-Стартове вікно, що відкривається при запуску програми.  
-Зверху показаний загальний баланс на всіх рахунках, підсумований по різних валютах окремо (наприклад uah, usd, euro, usdt).  
-Посередині вікна демонструється частка витрат від загальних доходів та частка залишку від загальних доходів за весь час у відсотковому відношенні.  
-У верхній частині сторінки знаходиться меню для навігації по програмі. Містить пункти: Головна, Рахунки, Історія, Доходи, Витрати, Налаштування.  
-Внизу вікна посередині розташована кнопка "Додати транзацію", натискаючи на яку, користувач має змогу додати транзакцію.  
-Користувач обирає рахунок, з якого, чи, на який, відбулась транзакція (dropdown list), категорію транзакції (dropdown list) та суму (input) у новому вікні:
+The initial window that opens upon application launch.
+The total balance across all accounts is shown at the top, summarized separately by different currencies (e.g., UAH, USD, EUR, USDT).
+The center of the window displays the share of expenses relative to total income and the share of the remaining balance relative to total income as percentages.
+The top of the page contains a navigation menu with items: Home, Accounts, History, Income, Expenses, Settings.
+An "Add Transaction" button is located at the bottom center, allowing the user to add a transaction.
+The user selects the account, category (from dropdown lists), and enters the amount (input) in a new window:
 
 <p align="center">
-	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/add%20trans.jpg" alt="Додавання транзакції"/>
+	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/add%20trans.jpg" alt="Add transaction"/>
 </p>
 
-#### 2. Рахунки
+#### 2. Accounts
 
 <p align="center">
-	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/accounts.jpg" alt="Рахунки"/>
+	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/accounts.jpg" alt="Accounts"/>
 </p>
 
-Вікно, що відкривається при переході в пункт меню Рахунки.  
-На цій сторінці відображаються послідовно усі рахунки з балансом, погрупованим по валютах У форматі: <<Назва рахунку: сума + валюта>>
-У верхній частині сторінки знаходиться меню для навігації по програмі. Містить пункти: Головна, Рахунки, Історія, Доходи, Витрати, Налаштування.  
-Вгорі є кнопка з можливістю додати рахунок.  
-Користувач у новому вікні вводить назву рахунку (input), обирає валюти (input) та вводить суми (input). Внизу вікна знаходиться кнопка зберегти, при натиску на яку зберігається новий рахунок :
+The window opened via the "Accounts" menu item.
+This page displays all accounts sequentially with balances grouped by currency in the format: <<Account Name: Amount + Currency>>.
+The top navigation menu remains accessible.
+An "Add Account" button is located at the top.
+In a new window, the user enters the account name (input), selects currencies (input), and enters amounts (input). A "Save" button at the bottom saves the new account:
 
 <p align="center">
-	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/add%20account.jpg" alt="Додавання рахунку"/>
+	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/add%20account.jpg" alt="Add account"/>
 </p>
 
-#### 3. Історія
+#### 3. History
 
 <p align="center">
-	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/history.jpg" alt="Історія"/>
+	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/history.jpg" alt="History"/>
 </p>
 
-Вікно, що відкривається при переході в пункт меню Історія.  
-У верхній частині сторінки знаходиться меню для навігації по програмі. Містить пункти: Головна, Рахунки, Історія, Доходи, Витрати, Налаштування.  
-На цій сторінці відображаються в хронологічному порядку усі транзакції у форматі <<Дата, назва рахунку, категорія, сума, валюта>>.  
-Кожна транзакція має свій колір блоку - блакитний, якщо це дохід, червоний - витрата.  
-Кожен блок з транзакцією також містить у правій частині кнопку Редагувати і Видалити, які відкривають нове вікно для редагування або видалення транзакції:
+The window opened via the "History" menu item.
+Displays all transactions in chronological order in the format: <<Date, Account Name, Category, Amount, Currency>>.
+Each transaction block is color-coded: blue for income, red for expenses.
+Each block contains "Edit" and "Delete" buttons on the right side, which open a window for modifying or removing the transaction:
 
 <p align="center">
-	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/edit%20trans%201.jpg" alt="Редагування транзакції"/>
+	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/edit%20trans%201.jpg" alt="Edit transaction"/>
 </p>
 
-Користувач має змогу змінити рахунок (dropdown list), категорію (dropdown list) та суму (input) і зберегти або видалити транзакцію, натиснувши на відповідні кнопки внизу вікна.
+Users can change the account (dropdown list), category (dropdown list), and amount (input), then save or delete the transaction using the buttons at the bottom.
 
-#### 4. Доходи  
+#### 4. Income
 
 <p align="center">
-	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/profit.jpg" alt="Доходи"/>
+	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/profit.jpg" alt="Income"/>
 </p>
 
-Вікно, що відкривається при переході в пункт меню Доходи.  
-У верхній частині сторінки знаходиться меню для навігації по програмі. Містить пункти: Головна, Рахунки, Історія, Доходи, Витрати, Налаштування.  
-На цій сторінці відображаються сумарні доходи по категоріях з підсумованими балансами по валютах у форматі: <<Категорія: сума + валюта >> за даний місяць.  
-Внизу вікна є блок, де виводиться підсумок по всіх валютах.   
+The window opened via the "Income" menu item.
+Displays total income by category with summarized balances by currency for the current month in the format: <<Category: Amount + Currency>>.
+A block at the bottom shows the summary for all currencies.
 
-#### 5. Витрати  
+#### 5. Expenses
 
 <p align="center">
-	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/expense.jpg" alt="Витрати"/>
+	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/expense.jpg" alt="Expenses"/>
 </p>
 
-Вікно, що відкривається при переході в пункт меню Витрати.  
-У верхній частині сторінки знаходиться меню для навігації по програмі. Містить пункти: Головна, Рахунки, Історія, Доходи, Витрати, Налаштування.  
-На цій сторінці відображаються сумарні витрати по категоріях з підсумованими балансами по валютах у форматі: <<Категорія: сума + валюта >> за даний місяць.  
-Внизу вікна є блок, де виводиться підсумок по всіх валютах.   
+The window opened via the "Expenses" menu item.
+Displays total expenses by category with summarized balances by currency for the current month in the format: <<Category: Amount + Currency>>.
+A block at the bottom shows the summary for all currencies.
 
-#### 6. Налаштування  
+#### 6. Settings
 
 <p align="center">
-	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/settings%20main.jpg" alt="Налаштування"/>
+	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/settings%20main.jpg" alt="Settings"/>
 </p>
 
-Вікно, що відкривається при переході в пункт меню Налаштування.  
-У верхній частині сторінки знаходиться меню для навігації по програмі. Містить пункти: Головна, Рахунки, Історія, Доходи, Витрати, Налаштування.  
-На цій сторінці відображаються два блоки - пункти: Рахунки та Категорії, які переадресовують користувача на відповідну сторінку налаштувань.
+The window opened via the "Settings" menu item.
+Contains two main blocks: Accounts and Categories, which redirect the user to their respective configuration pages.
 
-#### 7. Налаштування рахунків   
+#### 7. Account Settings
 
 <p align="center">
-	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/settings%20acc.jpg" alt="Налаштування рахунків"/>
+	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/settings%20acc.jpg" alt="Account Settings"/>
 </p>
 
-Вікно, що відкривається при переході в пункт Рахунки вікна Налаштування.  
-У верхній частині сторінки знаходиться меню для навігації по програмі. Містить пункти: Головна, Рахунки, Історія, Доходи, Витрати, Налаштування.  
-На цій сторінці відображаються послідовно блоки з назвою рахунків, у правій частині вони містять кнопку Редагувати і Видалити, які відкривають нове вікно і дають змогу редагувати або видалити рахунок:
+The window opened via the "Accounts" section in Settings.
+Displays account blocks sequentially. Each block has "Edit" and "Delete" buttons that open a configuration window:
 
 <p align="center">
-	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/edit%20acc.jpg" alt="Налаштування рахунків 1"/>
+	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/edit%20acc.jpg" alt="Edit Account"/>
 </p>
 
-Користувач має можливість змінити назву рахунку (input) та баланс.  
-Внизу знаходяться дві кнопки - Зберегти та Видалити, які виконують відповідні операції.
+Users can modify the account name (input) and balance. "Save" and "Delete" buttons execute the respective actions.
 
-#### 8. Налаштування категорій   
+#### 8. Category Settings
 
 <p align="center">
-	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/settings%20cat.jpg" alt="Налаштування категорій"/>
+	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/settings%20cat.jpg" alt="Category Settings"/>
 </p>
 
-Вікно, що відкривається при переході в пункт Категорії вікна Налаштування.  
-У верхній частині сторінки знаходиться меню для навігації по програмі. Містить пункти: Головна, Рахунки, Історія, Доходи, Витрати, Налаштування.  
-На цій сторінці відображаються послідовно блоки з назвою категоірй, у правій частині вони містять кнопку Редагувати і Видалити, які відкривають нове вікно і дають змогу редагувати або видалити категорію:
+The window opened via the "Categories" section in Settings.
+Displays category blocks sequentially. Each block has "Edit" and "Delete" buttons that open a configuration window:
 
 <p align="center">
-	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/settings%20cat%201.jpg" alt="Налаштування категорій 1"/>
+	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/settings%20cat%201.jpg" alt="Edit Category"/>
 </p>
 
-Користувач має можливість змінити назву категорії (input).  
-Внизу знаходяться дві кнопки - Зберегти та Видалити, які виконують відповідні операції.  
-
-Також зверху основного вікна є кнопка додати категорію, яка дає користувача можливість додати категорію у новому вікні:
+Users can modify the category name (input). "Save" and "Delete" buttons are at the bottom.
+An "Add Category" button is available at the top of the main window to create a new category:
 
 <p align="center">
-	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/add%20cat.jpg" alt="Додавання категорій 1"/>
+	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/add%20cat.jpg" alt="Add Category"/>
 </p>
 
-Користувач вводить назву категорії і зберігає або скасовує дію.
-
-#### 9. Авторизація   
+#### 9. Authorization
 
 <p align="center">
-	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/login.jpg" alt="Налаштування категорій"/>
+	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/login.jpg" alt="Authorization"/>
 </p>
 
-Користувач авторизується: вводить адресу електронної пошти та пароль. Якщо він не має акаунту, то натискає Зареєструватись.
+User logs in by entering an email address and password. If they don't have an account, they click "Register".
 
-#### 10. Реєстрація   
+#### 10. Registration
 
 <p align="center">
-	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/register.jpg" alt="Налаштування категорій"/>
+	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/register.jpg" alt="Registration"/>
 </p>
 
-Користувач реєструється: вводить адресу електронної пошти, пароль, після чого він повинен підтвердити електронну пошту перейшовши по посиланню в надісланому листі.
+User registers by entering an email address and password, then must confirm the email via a link sent to them.
 
-## ER Діаграма
+## ER Diagram
 
 <p align="center">
-	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/er.jpg" alt="Use case"/>
+	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/er.jpg" alt="ER Diagram"/>
 </p>
