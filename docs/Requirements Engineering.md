@@ -75,7 +75,7 @@ The application has two types of users: **authorized users** and **unauthorized 
 ## Use case diagram
 
 <p align="center">
-	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/use.jpg" alt="Use case"/>
+	<img src="https://github.com/yvoznyak/Trekster.web/blob/main/docs/img/Use%20case%20diagram.jpg" alt="Use case"/>
 </p>
 
 # Account Management System
