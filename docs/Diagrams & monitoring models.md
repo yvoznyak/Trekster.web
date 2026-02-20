@@ -1,271 +1,229 @@
 # Trekster
 
-## Data model
+## Data Model
 
-### ER діаграма
-
-<p align="center">
-	<img src="https://github.com/yvoznyak/Trekster_web/blob/main/docs/images/er.jpg" alt="Use case"/>
-</p>
-
-### Опис сутностей
-
-**<a href="https://github.com/yvoznyak/Trekster/blob/main/db/uml.pdf" target="_blank">Посилання</a>**
-
-### Класифікація даних по "data retention policy"
-
-#### Рівень конфіденційності
-
-##### Публічні дані:
-
-- Currencies.name: Назви валют не містять конфіденційної інформації.
-- Categories.name: Назви категорій є загальними і неконфіденційними.
-
-##### Внутрішні дані:
-
-- Accounts.name: Імена рахунків можуть бути внутрішньою інформацією організації.
-- Transactions.note: Нотатки до транзакцій можуть містити службову інформацію.
-
-##### Конфіденційні дані:
-
-- Transactions.sum: Суми транзакцій вважаються фінансовою інформацією, що потребує захисту.
-- StartBalances.sum: Початкові баланси рахунків є конфіденційними даними.
-
-#### Тип даних
-
-##### Персональні дані: Відсутні.
-
-##### Фінансові дані:
-
-- StartBalances.sum
-- Transactions.sum
-
-##### Дані про операції:
-
-- Transactions.date
-- Transactions.idAccount
-- Transactions.idCurrency
-- Transactions.idCategory
-- Transactions.note
-
-##### Референційні дані:
-- Currencies
-- Categories
-- Accounts
-
-#### Період зберігання
-
-##### Короткострокове зберігання (6-12 місяців):
-
-- Transactions.note: Нотатки можуть бути видалені після короткого періоду, якщо вони не використовуються в аналітиці.
-
-##### Середньострокове зберігання (3-5 років):
-
-- Transactions.date
-- Transactions.sum
-- StartBalances.sum
-- Accounts.name
-
-##### Довгострокове зберігання (5+ років):
-
-- Currencies.name
-- Categories.name
-- Transactions.idAccount
-- Transactions.idCurrency
-- Transactions.idCategory
-
-#### Юридичні вимоги
-
-- Транзакції (Transactions): Згідно із фінансовими або податковими вимогами, інформація про транзакції повинна зберігатися щонайменше 5 років.
-- Початкові баланси (StartBalances): Можуть зберігатися відповідно до законодавчих вимог, наприклад, 5-7 років.
-- Категорії та валюти: Дані про категорії та валюти зазвичай не регулюються законодавством, але можуть зберігатися довгостроково для підтримки історичної звітності.
-
-#### Бізнес-значення
-
-##### Критичні дані:
-
-- StartBalances.sum: Важливі для забезпечення точності фінансової звітності.
-- Transactions.sum: Необхідні для аналізу доходів, витрат та прибутковості.
-
-##### Архівні дані:
-
-- Currencies.name: Архівуються для забезпечення зв’язності історичних даних.
-- Categories.name: Використовуються для історичної звітності.
-
-#### Рекомендації для впровадження політики зберігання
-
-##### Автоматизація очищення даних:
-
-- Використовувати тригери чи крон-завдання для видалення старих нотаток або даних транзакцій, які перевищили строк зберігання.
-
-##### Архівування:
-
-- Дані з таблиць Currencies та Categories можуть бути переміщені до архіву після їх активного використання.
-
-##### Шифрування конфіденційних даних:
-
-- Забезпечити шифрування колонок із фінансовими даними, такими як Transactions.sum і StartBalances.sum.
-
-##### Логування видалення:
-
-- Створити журнал видалення даних для забезпечення прозорості відповідно до регуляторних вимог.
-
-## Resiliency model
-
-### СID діаграма
+### ER Diagram
 
 <p align="center">
-	<img src="https://github.com/yvoznyak/ooap_trekster/blob/main/CID.png"/>
+	<img src="https://github.com/yvoznyak/Trekster.web/blob/main/docs/img/Db/er.jpg" alt="ER Diagram"/>
 </p>
 
-#### Проблема — Невірний баланс рахунку
+### Entity Description
 
-Опис категорій причин:
+**<a href="https://github.com/yvoznyak/Trekster/blob/main/db/uml.pdf" target="_blank">Link to Documentation</a>**
 
-- Люди: Помилки через недосконалі знання або некоректну роботу користувачів (наприклад, неправильний введення даних).
-- Процес: Невірно виконані операції або помилки в обчисленнях, які можуть бути викликані проблемами з транзакціями чи категоріями.
-- Обладнання: Проблеми з сервером чи іншими компонентами інфраструктури, що можуть вплинути на базу даних.
-- Матеріали: Невірно введена інформація про валюту чи транзакції, що можуть призвести до неправильного балансу.
+### Data Classification by Data Retention Policy
 
-#### RMA діаграма
+#### Confidentiality Level
+
+##### Public Data:
+- `Currencies.name`: Currency names do not contain sensitive information.
+- `Categories.name`: Category names are general and non-confidential.
+
+##### Internal Data:
+- `Accounts.name`: Account names may be internal information for the organization/user.
+- `Transactions.note`: Transaction notes may contain internal operational information.
+
+##### Confidential Data:
+- `Transactions.sum`: Transaction amounts are considered financial information requiring protection.
+- `StartBalances.sum`: Initial account balances are sensitive confidential data.
+
+#### Data Type
+
+##### Personal Data: None.
+
+##### Financial Data:
+- `StartBalances.sum`
+- `Transactions.sum`
+
+##### Operational Data:
+- `Transactions.date`
+- `Transactions.idAccount`
+- `Transactions.idCurrency`
+- `Transactions.idCategory`
+- `Transactions.note`
+
+##### Reference Data:
+- `Currencies`
+- `Categories`
+- `Accounts`
+
+#### Retention Period
+
+##### Short-term Storage (6-12 months):
+- `Transactions.note`: Notes can be deleted after a short period if they are not used for analytics.
+
+##### Medium-term Storage (3-5 years):
+- `Transactions.date`
+- `Transactions.sum`
+- `StartBalances.sum`
+- `Accounts.name`
+
+##### Long-term Storage (5+ years):
+- `Currencies.name`
+- `Categories.name`
+- `Transactions.idAccount`
+- `Transactions.idCurrency`
+- `Transactions.idCategory`
+
+#### Legal Requirements
+- **Transactions**: According to financial or tax requirements, transaction information must be stored for at least 5 years.
+- **Initial Balances (StartBalances)**: May be stored according to legal requirements, for example, 5-7 years.
+- **Categories and Currencies**: Data on categories and currencies are usually not regulated by law but can be stored long-term to support historical reporting.
+
+#### Business Value
+
+##### Critical Data:
+- `StartBalances.sum`: Essential for ensuring the accuracy of financial statements.
+- `Transactions.sum`: Necessary for analyzing income, expenses, and profitability.
+
+##### Archival Data:
+- `Currencies.name`: Archived to ensure the connectivity of historical data.
+- `Categories.name`: Used for historical reporting.
+
+#### Retention Policy Implementation Recommendations
+
+##### Cleanup Automation:
+- Use triggers or cron jobs to remove old notes or transaction data that have exceeded their retention period.
+
+##### Archiving:
+- Data from `Currencies` and `Categories` tables can be moved to an archive after their active use.
+
+##### Confidential Data Encryption:
+- Ensure encryption of columns containing financial data, such as `Transactions.sum` and `StartBalances.sum`.
+
+##### Deletion Logging:
+- Create a data deletion log to ensure transparency in accordance with regulatory requirements.
+
+## Resiliency Model
+
+### CID Diagram (Cause-Influence-Diagram)
 
 <p align="center">
-	<img src="https://github.com/yvoznyak/ooap_trekster/blob/main/RMA.png"/>
+	<img src="https://github.com/yvoznyak/ooap_trekster/blob/main/CID.png" alt="CID Diagram"/>
 </p>
 
-##### Кроки для аналізу та вирішення:
+#### Problem — Incorrect Account Balance
 
-###### Причини:
+Description of root cause categories:
+- **People**: Errors due to insufficient knowledge or incorrect user actions (e.g., wrong data entry).
+- **Process**: Incorrectly executed operations or calculation errors, which may be caused by issues with transactions or categories.
+- **Equipment**: Problems with the server or other infrastructure components that may affect the database.
+- **Materials**: Incorrectly entered information about currency or transactions, leading to an incorrect balance.
 
-- Транзакції можуть бути введені з помилками.
-- Невірно введені дані можуть призвести до помилок у розрахунках.
+#### RMA Diagram (Root Cause Analysis)
 
-###### Корінні причини:
+<p align="center">
+	<img src="https://github.com/yvoznyak/ooap_trekster/blob/main/RMA.png" alt="RMA Diagram"/>
+</p>
 
-- Невірно введені дані про категорії та валютні курси.
-- Відсутність належних перевірок в системі.
+##### Analysis and Resolution Steps:
 
-###### Рішення:
+###### Causes:
+- Transactions may be entered with errors.
+- Incorrectly entered data can lead to calculation errors.
 
-- Додати механізм валідації даних для категорій та валютних курсів.
-- Перевіряти правильність обчислень під час вставки або оновлення транзакцій.
-- Впровадити автоматичні тести для перевірки правильності даних.
+###### Root Causes:
+- Incorrectly entered data regarding categories and exchange rates.
+- Lack of proper validation checks in the system.
 
-## Security model
+###### Solutions:
+- Add a data validation mechanism for categories and exchange rates.
+- Verify the correctness of calculations during transaction insertion or updates.
+- Implement automated tests to verify data integrity.
 
-**<a href="https://github.com/yvoznyak/ooap_trekster/blob/main/Mitigation%20plan.md" target="_blank">Threat model та migitation plan</a>**
+## Security Model
 
-## Analytics model
-Таблиця основних функціональних метрик для застосунку управління особистими фінансами:
+**<a href="https://github.com/yvoznyak/ooap_trekster/blob/main/Mitigation%20plan.md" target="_blank">Threat Model and Mitigation Plan</a>**
 
-| **Метрика**                               | **Виміри**                                                 | **Зв'язок із функціональними вимогами**                   | **Коментарі**                                          |
+## Analytics Model
+
+Main functional metrics table for the personal finance management application:
+
+| **Metric** | **Dimensions** | **Relationship with Functional Requirements** | **Comments** |
 |-------------------------------------------|------------------------------------------------------------|----------------------------------------------------------|--------------------------------------------------------|
-| **Кількість активних користувачів**       | Час (день, тиждень, місяць), географія, тип пристрою       | Відстеження загальної активності користувачів             | Визначає залученість та утримання користувачів         |
-| **Кількість нових реєстрацій**            | Час, джерело трафіку, кампанія                             | Ефективність процесу реєстрації та маркетингових зусиль   | Допомагає оцінити зростання бази користувачів          |
-| **Кількість входів у систему**            | Час, тип пристрою, географія                               | Зручність та надійність авторизації                       | Відображає регулярність використання застосунку        |
-| **Кількість доданих транзакцій**          | Час, категорія витрат, тип транзакції                      | Основна функціональність додавання фінансових даних       | Показує, наскільки активно користувачі ведуть облік    |
-| **Кількість згенерованих/переглянутих звітів**         | Час, тип звіту                                             | Функціональність аналітики та звітності                   | Показує, як користувачі аналізують свої фінанси        |
-| **Середня тривалість сесії**              | Час, тип пристрою                                          | Рівень залученості користувачів                           | Відображає інтерес до застосунку                       |
-| **Кількість експортованих файлів**        | Час, тип даних, користувач                                        | Функціональність експорту даних та зручність використання                  | Відображає потребу користувачів в експорті даних        |
-| **Рівень відтоку користувачів**           | Час                                                        | Утримання користувачів та якість застосунку               | Допомагає визначити проблеми з утриманням              |
-| **Кількість доданих рахунків**       | Час, тип рахунку                                          | Додавати рахунки                     | Відображає використання функції управління рахунками                     |
-| **Відсоток використання функцій**         | Функції, час                                               | Популярність та корисність різних функцій                 | Допомагає у пріоритизації розвитку функціоналу         |
+| **Number of Active Users** | Time (day, week, month), geography, device type | Tracking overall user activity | Determines engagement and retention |
+| **Number of New Registrations** | Time, traffic source, campaign | Effectiveness of registration process and marketing efforts | Helps evaluate user base growth |
+| **Number of System Logins** | Time, device type, geography | Convenience and reliability of authorization | Reflects regularity of app usage |
+| **Number of Added Transactions** | Time, expense category, transaction type | Core functionality of financial data entry | Shows how actively users keep records |
+| **Number of Generated/Viewed Reports** | Time, report type | Analytics and reporting functionality | Shows how users analyze their finances |
+| **Average Session Duration** | Time, device type | User engagement level | Reflects interest in the application |
+| **Number of Exported Files** | Time, data type, user | Export functionality and usability | Reflects user need for data portability |
+| **Churn Rate** | Time | User retention and app quality | Helps identify retention issues |
+| **Number of Added Accounts** | Time, account type | Account management functionality | Reflects usage of account management features |
+| **Feature Usage Percentage** | Feature, time | Popularity and utility of various features | Helps in prioritizing feature development |
 
-**Воронки (Funnels):**
+**Funnels:**
 
-1. **Funnel реєстрації та першого використання:**
-   - Відвідування сторінки реєстрації
-   - Заповнення та подання форми реєстрації
-   - Підтвердження електронної пошти
-   - Перший вхід у систему
-   - Додавання першої транзакції
+1. **Registration and First Use Funnel:**
+   - Visit registration page
+   - Fill out and submit registration form
+   - Confirm email address
+   - First login to the system
+   - Add first transaction
 
-   *Ця funnel допомагає відстежити конверсію від потенційного користувача до активного користувача, який почав використовувати основний функціонал застосунку.*
+   *This funnel helps track the conversion from a potential user to an active user who has started using the main functionality.*
 
-2. **Funnel використання аналітики та експорту даних:**
-   - Вхід у систему
-   - Перехід до історії транзакцій
-   - Генерація звіту
-   - Експорт даних у файл (.csv)
+2. **Analytics Usage and Data Export Funnel:**
+   - Log in to the system
+   - Navigate to transaction history
+   - Generate a report
+   - Export data to a file (.csv)
 
-   *Ця funnel дозволяє оцінити, як користувачі взаємодіють з функціями аналізу та експорту даних, і чи допомагає це їм у управлінні фінансами.*
+   *This funnel allows for evaluating how users interact with analysis and export features and whether it helps them in financial management.*
 
-## Monitoring & Alerting model
-**Monitoring**
+## Monitoring & Alerting Model
 
-Таблиця з основними операційними метриками, які будуть зібрані для застосунку:
+### Monitoring
 
-| **Метрика** | **Виміри** | **Зв'язок з інфраструктурними ресурсами** | **Як збирається метрика** |
+Operational metrics collected for the application:
+
+| **Metric** | **Dimensions** | **Relation to Infrastructure Resources** | **Collection Method** |
 |-------------|------------|--------------------------------------------|----------------------------|
-| **1. Використання CPU** | % використання, кількість ядер | Віртуальні машини, App Service | Azure Monitor, Application Insights |
-| **2. Використання пам'яті** | Обсяг використаної/доступної пам'яті | Віртуальні машини, App Service | Azure Monitor, Application Insights |
-| **3. Диск I/O** | Швидкість читання/запису в MB/s | Сховища даних, бази даних | Azure Monitor |
-| **4. Мережевий трафік** | Вхідний/вихідний трафік в MB/s | Віртуальні мережі, балансувальники навантаження | Azure Network Watcher |
-| **5. Час відповіді застосунку** | Середній, максимальний, мінімальний час у мс | Web App, API | Application Insights |
-| **6. Кількість запитів** | Запити в секунду | Web App, API | Application Insights |
-| **7. Рівень помилок** | % помилкових запитів | Web App, API | Application Insights |
-| **8. Продуктивність запитів до БД** | Час виконання запитів у мс | SQL Database, Cosmos DB | Azure SQL Analytics |
-| **9. Кількість активних користувачів** | Унікальні користувачі за період | Застосунок | Application Insights |
-| **10. Виключення застосунку** | Типи помилок, частота | Застосунок | Application Insights |
-| **11. Затримка мережі** | Затримка у мс між клієнтом і сервером | CDN, мережа | Azure Monitor |
-| **12. Коди статусів HTTP** | Розподіл 2xx, 3xx, 4xx, 5xx | Web App, API | Application Insights |
-| **13. Стан сервісів Azure** | Події, інциденти, оновлення | Всі ресурси Azure | Azure Service Health |
+| **1. CPU Usage** | % usage, core count | Virtual Machines, App Service | Azure Monitor, Application Insights |
+| **2. Memory Usage** | Used/Available memory | Virtual Machines, App Service | Azure Monitor, Application Insights |
+| **3. Disk I/O** | Read/Write speed in MB/s | Data storage, databases | Azure Monitor |
+| **4. Network Traffic** | Inbound/Outbound traffic in MB/s | Virtual Networks, Load Balancers | Azure Network Watcher |
+| **5. App Response Time** | Avg, Max, Min time in ms | Web App, API | Application Insights |
+| **6. Request Count** | Requests per second | Web App, API | Application Insights |
+| **7. Error Rate** | % of failed requests | Web App, API | Application Insights |
+| **8. DB Query Performance** | Query execution time in ms | SQL Database, Cosmos DB | Azure SQL Analytics |
+| **9. Active User Count** | Unique users per period | Application | Application Insights |
+| **10. App Exceptions** | Error types, frequency | Application | Application Insights |
+| **11. Network Latency** | Latency in ms (client to server) | CDN, Network | Azure Monitor |
+| **12. HTTP Status Codes** | Distribution of 2xx, 3xx, 4xx, 5xx | Web App, API | Application Insights |
+| **13. Azure Service Health** | Events, incidents, updates | All Azure resources | Azure Service Health |
 
-**Пояснення збору метрик:**
+### Alerting
 
-- **Azure Monitor**: Інструмент для збору та аналізу телеметричних даних з ресурсів Azure, включаючи віртуальні машини, мережі та сховища.
-- **Application Insights**: Сервіс для моніторингу продуктивності та діагностики застосунків, що дозволяє відстежувати запити, виключення та користувацьку активність.
-- **Azure Network Watcher**: Забезпечує моніторинг та діагностику мережевої інфраструктури в Azure.
-- **Azure SQL Analytics**: Пропонує детальний аналіз продуктивності та використання ресурсів бази даних.
+Metrics with thresholds, alert types, and mitigation plans:
 
-**Alerting**
-
-Метрики з мінімальними/максимальними допустимими значеннями, типом та критичністю досягнення критичних значень, а також планом дій для найкритичніших:
-
-| **Метрика** | **Допустиме значення** | **Тип оповіщення** | **Критичність** | **План дій (Mitigation Plan)** |
+| **Metric** | **Threshold** | **Alert Type** | **Severity** | **Mitigation Plan** |
 |-------------|------------------------|--------------------|-----------------|-------------------------------|
-| **1. Використання CPU** | > 80% протягом 10 хвилин | Попередження | Висока | - Масштабувати ресурси<br>- Оптимізувати код<br>- Перевірити навантаження |
-| **2. Використання пам'яті** | > 75% постійно | Попередження | Висока | - Оптимізувати використання пам'яті<br>- Додати пам'ять або масштабувати |
-| **3. Рівень помилок** | > 5% запитів з помилками | Попередження | Висока | - Перевірити логи<br>- Виправити критичні помилки |
-| **4. Час відповіді застосунку** | > 2000 мс середній | Попередження | Середня | - Оптимізувати код<br>- Перевірити базу даних |
-| **5. Продуктивність запитів до БД** | > 1000 мс на запит | Попередження | Середня | - Оптимізувати запити<br>- Перевірити індекси |
-| **6. Диск I/O** | > 85% використання | Інформація | Середня | - Розширити дисковий простір<br>- Оптимізувати зберігання |
-| **7. Коди статусів HTTP 5xx** | > 1% від загальних запитів | Попередження | Висока | - Перевірити серверні помилки<br>- Виправити проблеми |
-| **8. Затримка мережі** | > 150 мс постійно | Інформація | Низька | - Перевірити мережеві підключення<br>- Оптимізувати маршрутизацію |
+| **1. CPU Usage** | > 80% for 10 minutes | Warning | High | - Scale resources<br>- Optimize code<br>- Check load |
+| **2. Memory Usage** | > 75% constantly | Warning | High | - Optimize memory usage<br>- Add memory or scale up |
+| **3. Error Rate** | > 5% of failed requests | Warning | High | - Check logs<br>- Fix critical errors |
+| **4. App Response Time** | > 2000 ms avg | Warning | Medium | - Optimize code<br>- Check database |
+| **5. DB Query Performance** | > 1000 ms per query | Warning | Medium | - Optimize queries<br>- Check indexes |
+| **6. Disk I/O** | > 85% usage | Info | Medium | - Expand disk space<br>- Optimize storage |
+| **7. HTTP 5xx Status Codes** | > 1% of total requests | Warning | High | - Check server errors<br>- Fix underlying issues |
+| **8. Network Latency** | > 150 ms constantly | Info | Low | - Check network connections<br>- Optimize routing |
 
-**Migitation plan для найкритичніших метрик:**
+### Mitigation Plan for Critical Metrics:
 
-1. **Використання CPU та пам'яті:**
+1. **CPU and Memory Usage:**
+   - **Diagnosis:** Use Azure Monitor to identify processes with high resource consumption.
+   - **Actions:** Scale VMs or App Service plans. Optimize application code/algorithms. Implement caching and asynchronous processing.
 
-   - **Діагностика:**
-     - Використати Azure Monitor для виявлення процесів з високим споживанням ресурсів.
-   - **Дії:**
-     - Масштабувати віртуальні машини або App Service плани.
-     - Зробити оптимізацію коду та алгоритмів застосунку.
-     - Впровадити кешування та асинхронну обробку.
+2. **Error Rate and HTTP 5xx Status Codes:**
+   - **Diagnosis:** Analyze logs using Application Insights. Identify common error causes.
+   - **Actions:** Fix code bugs and perform regression testing.
 
-2. **Рівень помилок та коди статусів HTTP 5xx:**
+3. **App Response Time and DB Query Performance:**
+   - **Diagnosis:** Use profiling in Application Insights. Analyze DB query duration.
+   - **Actions:** Optimize complex or slow SQL queries. Add/optimize indexes. Consider using a CDN or additional cache layers.
 
-   - **Діагностика:**
-     - Проаналізувати логи за допомогою Application Insights.
-     - Визначити часті причини помилок.
-   - **Дії:**
-     - Виправити помилки в коді та провести повторне тестування.
-
-3. **Час відповіді застосунку та продуктивність запитів до БД:**
-
-   - **Діагностика:**
-     - Використовувати профілювання в Application Insights.
-     - Аналізувати тривалість запитів до бази даних.
-   - **Дії:**
-     - Оптимізувати складні або повільні SQL-запити.
-     - Додати необхідні індекси або оптимізувати існуючі.
-     - Розглянути можливість використання CDN або додаткових кешів.
-
-**Пояснення щодо типів критичності:**
-
-- **Висока:** Потребує негайної уваги для запобігання серйозним збоям або втратам даних.
-- **Середня:** Необхідно вирішити проблему в найближчий час, щоб уникнути погіршення сервісу.
-- **Низька:** Моніторинг та планове вирішення без негайних дій.
-
----
+**Severity Definitions:**
+- **High:** Requires immediate attention to prevent serious failures or data loss.
+- **Medium:** Issue should be resolved soon to avoid service degradation.
+- **Low:** Monitoring and planned resolution without immediate action.
