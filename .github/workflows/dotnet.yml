@@ -1,0 +1,179 @@
+name: CI - Build & Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-test:
+    env:
+      ConnectionStrings__DefaultConnection: ${{ secrets.PROD_CONNECTION_STRING }}
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: treksterdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Install EF Core CLI
+      run: |
+        dotnet tool install --global dotnet-ef --version 7.*
+        echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
+    - name: Restore dependencies
+      run: dotnet restore Trekster_web/Trekster_web.sln
+
+    - name: Build solution
+      run: dotnet build Trekster_web/Trekster_web.sln --no-restore
+
+    - name: Wait for Postgres to be ready
+      run: |
+        echo "Waiting for PostgreSQL..."
+        for i in $(seq 1 30); do
+          if bash -c "</dev/tcp/localhost/5432" &>/dev/null; then
+            echo "PostgreSQL is ready!"
+            exit 0
+          fi
+          echo "Still waiting ($i/30)"
+          sleep 1
+        done
+        echo "PostgreSQL did not become ready in time." >&2
+        exit 1
+
+    - name: Run EF Migrations
+      env:
+        ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=treksterdb;Username=postgres;Password=postgres;"
+      run: |
+        dotnet ef database update \
+          --project Trekster_web/Trekster_web/Trekster_web.csproj \
+          --startup-project Trekster_web/Trekster_web/Trekster_web.csproj
+
+    - name: Install coverlet tool
+      run: dotnet tool install --global coverlet.console
+
+    - name: Install SonarScanner
+      run: dotnet tool install --global dotnet-sonarscanner
+
+    - name: Start SonarCloud analysis
+      run: |
+        dotnet sonarscanner begin /k:"${{ secrets.SONAR_PROJECT_KEY }}" \
+          /o:"${{ secrets.SONAR_ORGANIZATION }}" \
+          /d:sonar.token="${{ secrets.SONAR_SECRET }}" \
+          /d:sonar.cs.opencover.reportsPaths=coverage.xml \
+          /d:sonar.coverage.exclusions="**/Migrations/**,**/TreksterTests/**,**/wwwroot/**,**/Startup.cs,**/Program.cs"
+
+    - name: Build solution
+      run: dotnet build Trekster_web/Trekster_web.sln --no-restore
+
+    - name: Run tests with coverage
+      run: |
+        coverlet ./Trekster_web/TreksterTests/bin/Debug/net8.0/TreksterTests.dll \
+          --target "dotnet" \
+          --targetargs "test Trekster_web/TreksterTests/TreksterTests.csproj --no-build" \
+          -f opencover \
+          -o coverage.xml
+
+    - name: End SonarCloud analysis
+      run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_SECRET }}"
+
+    - name: Run unit/integration tests (excluding UI)
+      run: dotnet test Trekster_web/Trekster_web.sln --no-build --verbosity normal --filter "FullyQualifiedName!~TreksterUISeleniumTests"
+
+    - name: Publish Trekster for CI
+      run: dotnet publish Trekster_web/Trekster_web/Trekster_web.csproj -c Release -o publish
+
+    - name: Upload artifact for deployment
+      uses: actions/upload-artifact@v4
+      with:
+        name: .net-app
+        path: publish
+
+    - name: Serve Trekster
+      env:
+        ASPNETCORE_URLS:        "http://0.0.0.0:7034"
+        ASPNETCORE_ENVIRONMENT: Development
+        SeedTestUser:          "true" 
+        TESTUSER__EMAIL:        ${{ secrets.Email }}
+        TESTUSER__PASSWORD:     ${{ secrets.Password }}
+        ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=treksterdb;Username=postgres;Password=postgres;"
+      run: |
+        cd publish
+        nohup dotnet Trekster_web.dll > ../trekster.log 2>&1 &
+        cd ..
+        sleep 10
+        lsof -iTCP:7034 -sTCP:LISTEN || (cat trekster.log && exit 1)
+        curl -v http://localhost:7034
+    
+    - name: Health check
+      run: |
+        curl -v http://127.0.0.1:7034 || curl -v http://localhost:7034
+    
+    - name: Install Chrome
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y wget gnupg2
+        wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+        echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+        sudo apt-get update
+        sudo apt-get install -y google-chrome-stable
+        google-chrome --version
+    
+    - name: Restore & run Selenium UI Tests
+      env:
+        EMAIL:    ${{ secrets.Email }}
+        PASSWORD: ${{ secrets.Password }}
+        ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=treksterdb;Username=postgres;Password=postgres;"
+      run: |
+        dotnet restore Testing/TreksterUISeleniumTests/TreksterUISeleniumTests/TreksterUISeleniumTests.csproj
+        dotnet test Testing/TreksterUISeleniumTests/TreksterUISeleniumTests/TreksterUISeleniumTests.csproj --verbosity normal
+
+  deploy:
+    runs-on: windows-latest
+    needs: build-and-test
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: .net-app
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          auth-type: service_principal
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'trekster-app'
+          slot-name: 'staging'
+          package: .
